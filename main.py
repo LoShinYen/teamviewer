@@ -7,7 +7,7 @@ from logger import Logger
 import teamviewer_operations
 
 logger = Logger().get_logger()
-logger_time = Logger.record_time()
+
 teamviewr_main_operation = teamviewer_operations.TeamViewerOperations()
 teamviwer_waitingromm_operation = teamviewer_operations.TeamViewerWaitingRoomOperations()
 teamviwer_cancel_operation = teamviewer_operations.CancelTeamViewerExe()
@@ -19,24 +19,26 @@ os.environ["PYTHONUTF8"] = "1"
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
-logger.info(f"{logger_time} : exe start")
+logger.info(f"exe start")
 
 # # Input params
-# if len(sys.argv) < 4:
-#     logger.info("Error Msg : Please offer code and runnimg time")
-#     sys.exit(1)
+if len(sys.argv) < 4:
+    logger.info("Error Msg : Please offer code and runnimg time")
+    sys.exit(1)
 
-# session_code = sys.argv[1]
-# run_time = int(sys.argv[2])
-# full_path_to_exe = sys.argv[3]
+session_code = sys.argv[1]
+run_time = int(sys.argv[2])
+full_path_to_exe = sys.argv[3]
+TEAMVIEWER_IS_USED = False
+# session_code = 141408465
+# run_time = 3
+# full_path_to_exe = r"D:\Intersense\ADX\no_limit_publish\TeamViewerAutoConnect.exe"
 
-session_code = 141408465
-run_time = 3
-full_path_to_exe = r"D:\Intersense\ADX\no_limit_publish\TeamViewerAutoConnect.exe"
+
+
 
 logger.info(f"Input Params Code : {session_code} , RunningTime : {run_time} , FilePath : {full_path_to_exe}")
 
-TEAMVIEWER_IS_USED = False
 
 # app
 teamviewer_app = ""
@@ -109,7 +111,7 @@ def check_teamviewer_is_contect():
 def check_contect_time ():
     if teamviwer_check_status.check_contect_time(start_time,run_time) :
         close_connect_teamviewer()
-        logger.info(f"{logger_time} : Timeout and Exe is end")
+        logger.info(f"Timeout and Exe is end")
         sys.exit(0)
 
 # Cancel Connect
@@ -118,19 +120,19 @@ def close_connect_teamviewer():
     try :
         teamviwer_panel_operation.close_teamviewer_Panel()
     except Exception :
-        logger.info(f"{logger_time} TeamViewer Panel   Not Find")
+        logger.info("TeamViewer Panel   Not Find")
     
     # Close TeamViewer Waiting Room 
     try :
         teamviwer_waitingromm_operation.close_teamviewer_waiting_room()
     except Exception : 
-        logger.info(f"{logger_time} : TeamViewer - Waiting room  Not Find")
+        logger.info("TeamViewer - Waiting room  Not Find")
 
     # Close TeamViwer Window
     try :
         teamviewr_main_operation.close_window()
     except Exception : 
-        logger.info(f"{logger_time} TeamViewer Not Find")
+        logger.info("TeamViewer Not Find")
 
     # Check autoJoinTeamViewer.exe is running 
     if not is_exe_running(full_path_to_exe):
