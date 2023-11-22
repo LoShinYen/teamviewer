@@ -161,7 +161,7 @@ cython_debug/
 
 # develop
 demo.py
-main.py
+main_back.py
 close.py
 auto_verify_oauth2.py
 chromedriver-win64
