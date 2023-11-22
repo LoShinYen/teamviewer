@@ -1,36 +1,19 @@
 import sys
 import io
-import atexit
 import os
-# import psutil
+import time
+from datetime import datetime
 from pywinauto.application import Application
-from pywinauto.timings import WaitUntil, TimeoutError
 from pywinauto.findwindows import ElementNotFoundError
-from pywinauto.timings import wait_until, TimeoutError
 from pywinauto import findwindows
 import pyautogui
 import pyperclip
-import time
-import logging
-from logging.handlers import TimedRotatingFileHandler
-from datetime import datetime
 import psutil
+from logger import Logger
 
-# log setting
-script_path = os.path.abspath(__file__)
-script_dir = os.path.dirname(script_path)
-now = datetime.now()
-log_dir = os.path.join(f"{script_dir}\Pylog", now.strftime('%Y-%m'))
-if not os.path.exists(log_dir):
-    os.makedirs(log_dir)
-log_file = os.path.join(log_dir, now.strftime('%Y-%m-%d') + '.log')
-logger = logging.getLogger('MyLogger')
-logger.setLevel(logging.DEBUG)
-handler = TimedRotatingFileHandler(log_file, when='midnight', interval=1, backupCount=30, encoding='utf-8')
-handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s', '%Y-%m-%d %H:%M:%S'))
-logger.addHandler(handler)
-
+logger = Logger().get_logger()
 # setting utf-8 for net console
+os.environ["PYTHONUTF8"] = "1"
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
@@ -40,7 +23,7 @@ def record_time():
 
 logger.info(f"{record_time()} : exe start")
 
-#Input params
+# Input params
 if len(sys.argv) < 4:
     logger.info("Error Msg : Please offer code and runnimg time")
     sys.exit(1)
@@ -49,10 +32,9 @@ session_code = sys.argv[1]
 run_time = int(sys.argv[2])
 full_path_to_exe = sys.argv[3]
 
-# session_code = 102463008
+# session_code = 149572100
 # run_time = 3
 # full_path_to_exe = r"D:\Intersense\ADX\no_limit_publish\TeamViewerAutoConnect.exe"
-
 
 logger.info(f"Input Params Code : {session_code} , RunningTime : {run_time} , FilePath : {full_path_to_exe}")
 
@@ -65,6 +47,17 @@ teamviewer_app = ""
 teamviewer_app_remote = ""
 # time
 start_time = time.time()
+
+def cancel_teamviewer_app():
+    for proc in psutil.process_iter():
+        try:
+            process_name = proc.name()
+            executable_path = proc.exe()
+            if "TeamViewer" in process_name and "TeamViewerAutoConnect.exe" not in executable_path:
+                proc.terminate()
+                proc.wait()  
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            pass 
 
 # Open TeamViewer app
 def open_teamviewer():
@@ -88,7 +81,7 @@ def open_teamviewer():
         join_session_button = main_window.child_window(title="Join a session", control_type="Button")
         join_session_button.click()
         print("Clieck Join a session")
-
+        main_window.set_focus()
         time.sleep(1)
         pyperclip.copy(session_code)
         pyautogui.hotkey('ctrl', 'v')
@@ -102,7 +95,9 @@ def open_teamviewer():
     
     except Exception as err :
         logger.error(err)
+        cancel_teamviewer_app()
         TEAMVIEWER_IS_USED = False
+
 
 # Waiting Supporter Connect  
 def open_waiting_room() :
@@ -120,8 +115,11 @@ def open_waiting_room() :
         print("click join work")
 
     except Exception as e:
-        logger.error(e)
-        
+        if e == "timed out" :
+            logger.info("No Person Join")
+        else :
+            logger.error(e)
+
 def check_teamviewer_status():
         global teamviewer_app
         time.sleep(1)
@@ -166,6 +164,7 @@ def check_contect_time ():
         logger.info(f"{record_time()} : Timeout and Exe is end")
         sys.exit(0)
 
+# Cancel Connect
 def close_connect_teamviewer():
     # Close TeamViewer Panel
     try :
@@ -247,20 +246,20 @@ while True:
         time.sleep(1)
     # If there are issues monitoring the Waiting Room or it automatically closes due to no one connecting, reopen the Waiting Room.
     except Exception as e:
-        print(f"Waiting Room Error：{e}")
+        logger.error(f"Waiting Room Error：{e}")
         # Close Finish Before Open New TeamView
-        # terminate_teamviewer_processes()
-        for proc in psutil.process_iter():
-            try:
-                process_name = proc.name()
-                executable_path = proc.exe()
-                if "TeamViewer" in process_name and "TeamViewerAutoConnect.exe" not in executable_path:
-                    proc.terminate()
-                    proc.wait()  
-            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-                pass 
-            except Exception as err :
-                logger.error(f"repeat err msg : {err}")
+        cancel_teamviewer_app()
+        # for proc in psutil.process_iter():
+        #     try:
+        #         process_name = proc.name()
+        #         executable_path = proc.exe()
+        #         if "TeamViewer" in process_name and "TeamViewerAutoConnect.exe" not in executable_path:
+        #             proc.terminate()
+        #             proc.wait()  
+        #     except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+        #         pass 
+        #     except Exception as err :
+        #         logger.error(f"repeat err msg : {err}")
         open_teamviewer()
 
 
