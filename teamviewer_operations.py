@@ -9,21 +9,23 @@ import psutil
 import time
 
 logger = Logger().get_logger()
+TEAMVIEWER_PATH = r"C:\Program Files\TeamViewer\TeamViewer.exe"
+TEAMVIEWER_TITLE = "TeamViewer"
 
 class TeamViewerOperations:
     @staticmethod
-    def start_teamviewer(teamviewer_path):
-        app = Application(backend="uia").start(teamviewer_path)
+    def start_teamviewer():
+        app = Application(backend="uia").start(TEAMVIEWER_PATH)
         return app
     
     @staticmethod
-    def connect_to_teamviewer(app_title):
-        app = Application(backend="uia").connect(title=app_title)
+    def connect_to_teamviewer():
+        app = Application(backend="uia").connect(title=TEAMVIEWER_TITLE)
         return app
     
     @staticmethod
-    def get_main_window(app,app_title):
-        return app.window(title= app_title)
+    def get_main_window(app):
+        return app.window(title= TEAMVIEWER_TITLE)
     
     @staticmethod
     def click_remote_support(main_window):
@@ -51,12 +53,12 @@ class TeamViewerOperations:
         print("Click Conntect")  
 
     @staticmethod
-    def close_window(teamviewer_path ,teamviewer_title) :
-        teamviewer_app = Application(backend="uia").start(teamviewer_path )
+    def close_window() :
+        teamviewer_app = Application(backend="uia").start(TEAMVIEWER_PATH )
         time.sleep(2)
-        teamviewer_app = Application(backend="uia").connect(title=teamviewer_title)
+        teamviewer_app = Application(backend="uia").connect(title=TEAMVIEWER_TITLE)
         time.sleep(1)
-        main_window = teamviewer_app.window(title=teamviewer_title)
+        main_window = teamviewer_app.window(title=TEAMVIEWER_TITLE)
         main_window.close()
 
 class TeamViewerWaitingRoomOperations:
@@ -75,16 +77,13 @@ class TeamViewerWaitingRoomOperations:
     def waiting_for_supporter_join(waiting_window):
         try :
             print("Wait For Supporter Join")
-            btn = waiting_window.child_window(title="Join session", control_type="Button").wait('ready', timeout= 30)
+            btn = waiting_window.child_window(title="Join session", control_type="Button").wait('ready', timeout= 15)
+            waiting_window.set_focus()
             btn.click()
             print("click join work")
         except Exception as e:
-            if e == "timed out" :
-                print("supporter not join")
-                logger.info("No supporter Join")
-            else :
-                print(e)
-                logger.error(e)
+            print(e)
+            logger.info(f"Wait For Supporter Join {e}")
    
     @staticmethod
     def close_teamviewer_waiting_room():
@@ -107,8 +106,8 @@ class CancelTeamViewerExe :
 
 class CheckTeamViewerStatus :
     @staticmethod
-    def check_teamviewer_status(teamviewer_app,teamviewer_title):
-        main_window = teamviewer_app.window(title=teamviewer_title)
+    def check_teamviewer_status(teamviewer_app):
+        main_window = teamviewer_app.window(title=TEAMVIEWER_TITLE)
         status_texts = ["Waiting for user to join", "Ready", "Ongoing"]
         for status in status_texts:
             try:

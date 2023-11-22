@@ -21,23 +21,21 @@ sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 logger.info(f"{logger_time} : exe start")
 
-# Input params
-if len(sys.argv) < 4:
-    logger.info("Error Msg : Please offer code and runnimg time")
-    sys.exit(1)
+# # Input params
+# if len(sys.argv) < 4:
+#     logger.info("Error Msg : Please offer code and runnimg time")
+#     sys.exit(1)
 
-session_code = sys.argv[1]
-run_time = int(sys.argv[2])
-full_path_to_exe = sys.argv[3]
+# session_code = sys.argv[1]
+# run_time = int(sys.argv[2])
+# full_path_to_exe = sys.argv[3]
 
-# session_code = 149572100
-# run_time = 3
-# full_path_to_exe = r"D:\Intersense\ADX\no_limit_publish\TeamViewerAutoConnect.exe"
+session_code = 141408465
+run_time = 3
+full_path_to_exe = r"D:\Intersense\ADX\no_limit_publish\TeamViewerAutoConnect.exe"
 
 logger.info(f"Input Params Code : {session_code} , RunningTime : {run_time} , FilePath : {full_path_to_exe}")
 
-TEAMVIEWER_PATH = r"C:\Program Files\TeamViewer\TeamViewer.exe"
-TEAMVIEWER_TITLE = "TeamViewer"
 TEAMVIEWER_IS_USED = False
 
 # app
@@ -50,13 +48,13 @@ start_time = time.time()
 def open_teamviewer():
     global TEAMVIEWER_IS_USED
     global teamviewer_app
-    teamviewer_app = teamviewr_main_operation.start_teamviewer(TEAMVIEWER_PATH)
+    teamviewer_app = teamviewr_main_operation.start_teamviewer()
     try :
         time.sleep(4)
-        teamviewer_app = teamviewr_main_operation.connect_to_teamviewer(TEAMVIEWER_TITLE)
+        teamviewer_app = teamviewr_main_operation.connect_to_teamviewer()
 
         time.sleep(1)
-        main_window = teamviewr_main_operation.get_main_window(teamviewer_app,TEAMVIEWER_TITLE)
+        main_window = teamviewr_main_operation.get_main_window(teamviewer_app)
 
         time.sleep(1)
         teamviewr_main_operation.click_remote_support(main_window)
@@ -92,7 +90,7 @@ def open_waiting_room() :
 
 def check_teamviewer_status():
     time.sleep(1)
-    return teamviwer_check_status.check_teamviewer_status(teamviewer_app,TEAMVIEWER_TITLE)
+    return teamviwer_check_status.check_teamviewer_status(teamviewer_app)
 
 def check_teamviewer_is_contect():
     try:
@@ -109,7 +107,7 @@ def check_teamviewer_is_contect():
         return False
 
 def check_contect_time ():
-    if teamviwer_check_status.check_contect_time :
+    if teamviwer_check_status.check_contect_time(start_time,run_time) :
         close_connect_teamviewer()
         logger.info(f"{logger_time} : Timeout and Exe is end")
         sys.exit(0)
@@ -130,7 +128,7 @@ def close_connect_teamviewer():
 
     # Close TeamViwer Window
     try :
-        teamviewr_main_operation.close_window(TEAMVIEWER_PATH,TEAMVIEWER_TITLE)
+        teamviewr_main_operation.close_window()
     except Exception : 
         logger.info(f"{logger_time} TeamViewer Not Find")
 
