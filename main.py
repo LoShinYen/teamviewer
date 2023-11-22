@@ -2,23 +2,16 @@ import sys
 import io
 import os
 import time
-from datetime import datetime
-from pywinauto.application import Application
-
-from pywinauto import findwindows
 import psutil
 from logger import Logger
 import teamviewer_operations
-# from teamviewer_operations import TeamViewerOperatiomns
-# from teamviewer_operations import TeamViewerWaitingRoomOperations
-# from teamviewer_operations import TeamViewerWaitingRoomOperations
 
 logger = Logger().get_logger()
 logger_time = Logger.record_time()
-teamviewr_main_operation = teamviewer_operations.TeamViewerOperatiomns()
+teamviewr_main_operation = teamviewer_operations.TeamViewerOperations()
 teamviwer_waitingromm_operation = teamviewer_operations.TeamViewerWaitingRoomOperations()
 teamviwer_cancel_operation = teamviewer_operations.CancelTeamViewerExe()
-teamviwer_check_status = teamviewer_operations.CheckTeamViwerStatus()
+teamviwer_check_status = teamviewer_operations.CheckTeamViewerStatus()
 teamviwer_panel_operation = teamviewer_operations.TeamViewerPanel()
 
 # setting utf-8 for net console
@@ -95,7 +88,7 @@ def open_waiting_room() :
         
         teamviwer_waitingromm_operation.waiting_for_supporter_join(waiting_window)
     except Exception as err :
-        Logger.get_logger(err)
+        logger.error(err)
 
 def check_teamviewer_status():
     time.sleep(1)
