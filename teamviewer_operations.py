@@ -11,6 +11,7 @@ import time
 logger = Logger().get_logger()
 TEAMVIEWER_PATH = r"C:\Program Files\TeamViewer\TeamViewer.exe"
 TEAMVIEWER_TITLE = "TeamViewer"
+pyautogui.FAILSAFE = False
 
 class TeamViewerOperations:
     @staticmethod

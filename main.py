@@ -34,11 +34,7 @@ TEAMVIEWER_IS_USED = False
 # run_time = 3
 # full_path_to_exe = r"D:\Intersense\ADX\no_limit_publish\TeamViewerAutoConnect.exe"
 
-
-
-
 logger.info(f"Input Params Code : {session_code} , RunningTime : {run_time} , FilePath : {full_path_to_exe}")
-
 
 # app
 teamviewer_app = ""
