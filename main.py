@@ -19,7 +19,7 @@ os.environ["PYTHONUTF8"] = "1"
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
-logger.info(f"exe start")
+logger.info("exe start")
 
 # # Input params
 if len(sys.argv) < 4:
@@ -116,13 +116,13 @@ def close_connect_teamviewer():
     try :
         teamviwer_panel_operation.close_teamviewer_Panel()
     except Exception :
-        logger.info("TeamViewer Panel   Not Find")
+        logger.info("TeamViewer Panel Not Find")
     
     # Close TeamViewer Waiting Room 
     try :
         teamviwer_waitingromm_operation.close_teamviewer_waiting_room()
     except Exception : 
-        logger.info("TeamViewer - Waiting room  Not Find")
+        logger.info("TeamViewer - Waiting room Not Find")
 
     # Close TeamViwer Window
     try :
@@ -149,8 +149,8 @@ while True:
         open_teamviewer()
         if TEAMVIEWER_IS_USED :
             break
-    except Exception as er :
-        print(f"TeamViewer Open Error Msg : {er}")
+    except Exception as err :
+        print(f"TeamViewer Open Error Msg : {err}")
         open_teamviewer()
         if TEAMVIEWER_IS_USED :
             break

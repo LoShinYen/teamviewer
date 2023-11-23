@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 
 class Logger:
-    _instance = None  # 创建类属性以存储单例
+    _instance = None 
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
