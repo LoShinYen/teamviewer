@@ -6,17 +6,11 @@ the API Create or Cancel Session to manage the control status and number of Supp
 Future Expectation:
 To achieve automation in obtaining the API Key through TeamViewer OAuth2 authentication.
 
-TeamViewer Desktop Version: 15.47.3 (d11df019d35)
+TeamViewer Desktop Version: 15.51.6 (55c0da16c01)
 
-version : python3.12.0
-
-Reference Package :
-pip install pywinauto
-pip install pyautogui
-pip install pyperclip
+version : python3.9.0
 
 ---------------------------
-pip install pyinstaller
 
 set PYTHONUTF8=1
 pyinstaller main.py
