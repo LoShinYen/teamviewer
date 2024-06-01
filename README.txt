@@ -15,3 +15,5 @@ version : python3.9.0
 set PYTHONUTF8=1
 pyinstaller main.py
 ---------------------------
+
+pyinstaller  main.py

@@ -22,17 +22,17 @@ sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 logger.info("exe start")
 
 # # Input params
-# if len(sys.argv) < 4:
-#     logger.info("Error Msg : Please offer code and runnimg time")
-#     sys.exit(1)
+if len(sys.argv) < 4:
+    logger.info("Error Msg : Please offer code and runnimg time")
+    sys.exit(1)
 
-# session_code = sys.argv[1]
-# run_time = int(sys.argv[2])
-# full_path_to_exe = sys.argv[3]
+session_code = sys.argv[1]
+run_time = int(sys.argv[2])
+full_path_to_exe = sys.argv[3]
 TEAMVIEWER_IS_USED = False
-session_code = 168271807
-run_time = 30
-full_path_to_exe = r"D:\Intersense\ADX\no_limit_publish\TeamViewerAutoConnect.exe"
+# session_code = 168271807
+# run_time = 30
+# full_path_to_exe = r"D:\Intersense\ADX\no_limit_publish\TeamViewerAutoConnect.exe"
 
 logger.info(f"Input Params Code : {session_code} , RunningTime : {run_time} , FilePath : {full_path_to_exe}")
 
