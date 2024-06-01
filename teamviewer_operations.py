@@ -49,9 +49,28 @@ class TeamViewerOperations:
 
     @staticmethod
     def accept_join_remote(main_window):
+        main_window.set_focus()
         connect_button = main_window.child_window(title="Connect", control_type="Button")
         connect_button.click()
         print("Click Conntect")  
+
+    @staticmethod
+    def allow_access():
+        temp_app = Application(backend="uia").connect(title_re=".*TeamViewer.*Waiting room.*")
+        temp_room_window = temp_app.window(title_re=".*TeamViewer.*Waiting room.*", control_type="Window")
+
+        temp_room_window.set_focus()
+
+        allow_button = temp_room_window.child_window(title="Allow access", control_type="Text")
+        
+        # 如果按鈕不存在，可能需要更具體的查找
+        if not allow_button.exists():
+            allow_button = temp_room_window.child_window(control_type="Text", found_index=0)
+            if allow_button.window_text() == "Allow access":
+                print("使用不同方法找到 Allow access 按鈕")
+                
+        allow_button.click_input()
+        print("點擊 Allow Access")
 
     @staticmethod
     def close_window() :
@@ -61,6 +80,8 @@ class TeamViewerOperations:
         time.sleep(1)
         main_window = teamviewer_app.window(title=TEAMVIEWER_TITLE)
         main_window.close()
+
+
 
 class TeamViewerWaitingRoomOperations:
     @staticmethod
