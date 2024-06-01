@@ -74,28 +74,10 @@ class TeamViewerWaitingRoomOperations:
     def get_waiting_romm_window(waiting_window_app):
         app = waiting_window_app = waiting_window_app.window(title_re="TeamViewer - Waiting room")
         return app
-    
-    # @staticmethod
-    # def waiting_for_supporter_join(waiting_window):
-    #     try :
-    #         print("Wait For Supporter Join")
-    #         btn = waiting_window.child_window(title="Join session", control_type="Button").wait('ready', timeout= 15)
-    #         waiting_window.set_focus()
-    #         btn.click()
-    #         print("click join work")
-    #     except Exception as e:
-    #         print(e)
-    #         logger.info(f"Wait For Supporter Join {e}")
    
     @staticmethod
     def allow_access(waiting_window):
-        # temp_app = Application(backend="uia").connect(title_re=".*TeamViewer.*Waiting room.*")
-        # temp_room_window = temp_app.window(title_re=".*TeamViewer.*Waiting room.*", control_type="Window")
-
-        # temp_room_window.set_focus()
-
         allow_button = waiting_window.child_window(title="Allow access", control_type="Text")
-        
         # 如果按鈕不存在，可能需要更具體的查找
         if not allow_button.exists():
             allow_button = waiting_window.child_window(control_type="Text", found_index=0)
